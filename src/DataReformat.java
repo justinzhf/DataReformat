@@ -49,7 +49,7 @@ public class DataReformat {
         }
     }
 
-    public static void reformatTRACK() {
+    public static void reformatSpline() {
         String parentDir = "E:\\study\\TRACKS\\";
         String fileName = parentDir + "spline25Aug.txt";
         FileWriter fw = null;
@@ -103,8 +103,64 @@ public class DataReformat {
         }
     }
 
+
+    public static void reformatTrack() {
+        String parentDir = "E:\\study\\TRACKS\\";
+        String fileName = parentDir + "tracks25Aug.txt";
+        FileWriter fw = null;
+        try {
+
+
+            File inputFile = new File(fileName);
+            FileInputStream fis = new FileInputStream(inputFile);
+            InputStreamReader inr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(inr);
+
+            File outFile = new File("trk_output_trk.txt");
+            if (outFile.exists()) {
+                outFile.delete();
+            }
+            fw = new FileWriter(outFile, true);
+
+
+            String regex1="(\\s*R[\\d]*)(=)"+"\\[([\\d\\.\\-]*)\\s*([\\-\\d\\.]*)\\s*([\\-\\d\\.]*)\\]";
+            String regex2="\\[([\\d\\.\\-]*)\\s*([\\-\\d\\.]*)\\s*([\\-\\d\\.]*)\\]";
+            Pattern pattern1 = Pattern.compile(regex1);
+            Pattern pattern2=Pattern.compile(regex2);
+            Matcher matcher1 = null;
+            Matcher matcher2=null;
+
+            String line = null;
+            String id=null;
+            while ((line = br.readLine()) != null) {
+
+                matcher1 = pattern1.matcher(line);
+                matcher2 = pattern2.matcher(line);
+                if (matcher1.matches()) {
+                    id=matcher1.group(1);
+ /*                   fw.write(matcher.group(1) + " " + matcher.group(1)  + "\r\n");
+                    fw.write(matcher.group(1) + " " + matcher.group(3)  + "\r\n");
+                    fw.write(matcher.group(1) + " " + matcher.group(4)  + "\r\n");
+                    fw.write(matcher.group(1) + " " + matcher.group(5)  + "\r\n");
+*/
+                    fw.write(id+" "+matcher1.group(3)+" "+matcher1.group(4)+"\r\n");
+                }else if (matcher2.matches()){
+                    fw.write(id+" "+matcher2.group(1)+" "+matcher2.group(2)+"\r\n");
+                }
+
+
+            }
+
+            fw.flush();
+            fw.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
-        reformatTRACK();
+        reformatTrack();
 
     }
 }
