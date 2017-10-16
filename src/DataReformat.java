@@ -159,8 +159,65 @@ public class DataReformat {
         }
     }
 
+    public static void resizeTrack(){
+        String parentDir = "E:\\study\\TRACKS\\";
+        String fileName = parentDir + "trk_output_trk.txt";
+        FileWriter fw = null;
+        try {
+
+
+            File inputFile = new File(fileName);
+            FileInputStream fis = new FileInputStream(inputFile);
+            InputStreamReader inr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(inr);
+
+            File outFile = new File("resize.txt");
+            if (outFile.exists()) {
+                outFile.delete();
+            }
+            fw = new FileWriter(outFile, true);
+
+
+            String regex1="(\\s*R[\\d]*)([\\s]*)"+"([\\d\\.\\-]*)"
+                                                 +"\\s*([\\-\\d\\.]*)";
+
+            Pattern pattern1 = Pattern.compile(regex1);
+
+            Matcher matcher1 = null;
+
+
+            String line = null;
+            int y=0;
+            while ((line = br.readLine()) != null) {
+
+                matcher1 = pattern1.matcher(line);
+                if (matcher1.matches()) {
+
+ /*                   fw.write(matcher.group(1) + " " + matcher.group(1)  + "\r\n");
+                    fw.write(matcher.group(1) + " " + matcher.group(3)  + "\r\n");
+                    fw.write(matcher.group(1) + " " + matcher.group(4)  + "\r\n");
+                    fw.write(matcher.group(1) + " " + matcher.group(5)  + "\r\n");
+*/
+                    y=Integer.parseInt(matcher1.group(4));
+                    if(130<y&&y<350){
+                        fw.write(matcher1.group(1)+" "+matcher1.group(3)+" "+matcher1.group(4)+"\r\n");
+                    }
+
+                }
+
+            }
+
+            fw.flush();
+            fw.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
-        reformatTrack();
+        resizeTrack();
 
     }
 }
